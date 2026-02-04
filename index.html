@@ -3,13 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>محاضرات الرنين - القاموس الشامل</title>
+    <title>محاضرات الرنين - الأجهزة والملفات</title>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
         :root {
             --bg-color: #ffffff;
             --text-color: #202124;
             --accent-color: #0056b3;
+            --trans-bg: #f8f9fa;
+            --trans-border: #0056b3;
             --nav-bg: #f8f9fa;
             --highlight: #e8f0fe;
         }
@@ -31,35 +33,97 @@
         }
 
         .content-container {
-            padding: 30px 25px;
+            padding: 20px;
             max-width: 800px;
             margin: 0 auto;
-            direction: ltr; 
+            direction: ltr;
         }
 
-        p {
-            line-height: 2.2;
-            font-size: 1.2rem;
+        .text-block {
             margin-bottom: 20px;
-            text-align: justify;
-            color: #333;
+            border-bottom: 1px dashed #ddd;
+            padding-bottom: 15px;
         }
 
         .title-text {
             font-weight: bold;
-            font-size: 1.4rem;
+            font-size: 1.6rem;
             color: #000;
-            margin-bottom: 25px;
+            margin-top: 20px;
+            margin-bottom: 15px;
             display: block;
+            border-bottom: 3px solid var(--accent-color);
+            padding-bottom: 10px;
+            direction: ltr;
         }
 
         .sub-title {
             font-weight: bold;
-            font-size: 1.25rem;
+            font-size: 1.4rem;
             color: var(--accent-color);
-            margin-top: 30px;
-            margin-bottom: 15px;
+            margin-top: 25px;
+            margin-bottom: 10px;
             display: block;
+            direction: ltr;
+        }
+
+        .english-paragraph {
+            line-height: 1.8;
+            font-size: 1.25rem;
+            color: #333;
+            margin-bottom: 8px;
+            text-align: left;
+        }
+
+        .interactive-word {
+            cursor: pointer;
+            border-bottom: 1px dotted #999;
+            transition: background 0.2s;
+        }
+        .interactive-word:hover {
+            background-color: #e3f2fd;
+            color: var(--accent-color);
+        }
+        .interactive-word:active {
+            background-color: var(--accent-color);
+            color: white;
+        }
+
+        .toggle-trans-btn {
+            background: none;
+            border: none;
+            color: #666;
+            font-family: 'Cairo', sans-serif;
+            font-size: 0.95rem;
+            font-weight: bold;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            padding: 5px 0;
+            direction: rtl;
+            width: 100%;
+            transition: color 0.2s;
+        }
+        
+        .toggle-trans-btn:hover {
+            color: var(--accent-color);
+        }
+
+        .inline-translation {
+            display: none;
+            background-color: var(--trans-bg);
+            color: #000;
+            padding: 12px;
+            border-radius: 8px;
+            margin-top: 5px;
+            border-right: 4px solid var(--trans-border);
+            font-family: 'Cairo', sans-serif;
+            font-size: 1.15rem;
+            line-height: 1.6;
+            direction: rtl;
+            text-align: justify;
+            animation: fadeIn 0.3s ease-in-out;
         }
 
         .lecture-image-container {
@@ -67,23 +131,11 @@
             margin: 20px 0;
             text-align: center;
         }
-
         .lecture-image {
             max-width: 100%;
-            border-radius: 12px; 
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1); 
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
             border: 1px solid #eee;
-        }
-
-        .clickable {
-            cursor: pointer;
-            border-radius: 6px;
-            padding: 2px 2px;
-            transition: background 0.2s;
-        }
-
-        .clickable:active {
-            background-color: var(--highlight);
         }
 
         .bottom-nav {
@@ -100,7 +152,7 @@
             padding: 0 20px;
             box-shadow: 0 -4px 15px rgba(0,0,0,0.05);
             z-index: 1000;
-            direction: rtl; 
+            direction: rtl;
         }
 
         .nav-btn {
@@ -113,18 +165,13 @@
             font-weight: bold;
             font-size: 1rem;
             cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 8px;
             box-shadow: 0 2px 5px rgba(0,0,0,0.2);
         }
-
         .nav-btn:disabled {
             background-color: #e0e0e0;
             color: #999;
             box-shadow: none;
         }
-
         .page-counter {
             font-family: 'Cairo', sans-serif;
             font-weight: bold;
@@ -132,168 +179,47 @@
             background: #e9ecef;
             padding: 5px 15px;
             border-radius: 15px;
-            font-size: 1rem;
         }
 
         .sheet-overlay {
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.6);
-            z-index: 2000;
-            opacity: 0;
-            visibility: hidden;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: flex-end;
-            backdrop-filter: blur(3px);
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.5); z-index: 2000;
+            opacity: 0; visibility: hidden; transition: all 0.3s;
+            display: flex; align-items: flex-end;
         }
-
-        .sheet-overlay.active {
-            opacity: 1;
-            visibility: visible;
-        }
-
+        .sheet-overlay.active { opacity: 1; visibility: visible; }
         .sheet-content {
-            background: white;
-            width: 100%;
-            max-height: 85vh;
-            border-top-left-radius: 25px;
-            border-top-right-radius: 25px;
-            padding: 25px;
-            transform: translateY(100%);
-            transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
-            overflow-y: auto;
-            direction: rtl;
-            box-shadow: 0 -10px 40px rgba(0,0,0,0.2);
+            background: white; width: 100%; padding: 25px;
+            border-top-left-radius: 25px; border-top-right-radius: 25px;
+            transform: translateY(100%); transition: transform 0.3s;
+            text-align: center;
         }
-
-        .sheet-overlay.active .sheet-content {
-            transform: translateY(0);
-        }
-
-        .sheet-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-            border-bottom: 1px solid #eee;
-            padding-bottom: 10px;
-        }
-
-        .sheet-title {
-            font-family: 'Cairo', sans-serif;
-            font-weight: bold;
-            font-size: 1.1rem;
-            color: var(--accent-color);
-        }
-
-        .close-btn {
-            background: #f0f0f0;
-            border: none;
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
-            font-size: 20px;
-            color: #555;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .interactive-word {
-            display: inline-block;
-            cursor: pointer;
-            padding: 2px 3px;
-            border-radius: 4px;
-            transition: all 0.2s;
-            margin: 0 1px;
-            border-bottom: 1px dotted #ccc;
-        }
-
-        .interactive-word:hover {
-            background-color: #f0f4f8;
-            border-bottom-color: var(--accent-color);
-        }
-
-        .interactive-word:active, .interactive-word.active {
-            background-color: var(--accent-color);
-            color: white;
-            border-bottom-color: transparent;
-        }
-
-        .text-box {
-            background-color: #f8f9fa;
-            border: 1px solid #e9ecef;
-            padding: 16px;
-            border-radius: 12px;
-            margin-bottom: 16px;
-        }
-
-        .label {
-            font-family: 'Cairo', sans-serif;
-            font-size: 0.85rem;
-            color: #6c757d;
-            margin-bottom: 8px;
-            display: block;
-            font-weight: bold;
-        }
-
-        .english-text {
-            font-family: 'Roboto', sans-serif;
-            direction: ltr;
-            font-size: 1.2rem;
-            color: #212529;
-            font-weight: 500;
-            line-height: 1.6;
-        }
-
-        .arabic-text {
-            font-family: 'Cairo', sans-serif;
-            font-size: 1.15rem;
-            color: #198754; 
-            line-height: 1.7;
-        }
-
+        .sheet-overlay.active .sheet-content { transform: translateY(0); }
+        
         .selected-word-box {
             background-color: #e3f2fd;
             border: 1px solid #bbdefb;
-            padding: 15px;
-            border-radius: 12px;
-            text-align: center;
-            display: none;
+            padding: 15px; border-radius: 12px;
             margin-top: 10px;
-            animation: slideUp 0.3s ease;
         }
-
-        .selected-word-box.show {
-            display: block;
+        .sw-container {
+            display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 5px;
         }
-
+        .audio-btn {
+            background: none; border: none; cursor: pointer; font-size: 1.5rem; color: var(--accent-color);
+        }
         .sw-english {
-            font-family: 'Roboto', sans-serif;
-            font-weight: bold;
-            font-size: 1.3rem;
-            color: var(--accent-color);
-            display: block;
-            margin-bottom: 4px;
+            font-family: 'Roboto', sans-serif; font-weight: bold; font-size: 1.4rem; color: var(--accent-color);
         }
-
         .sw-arabic {
-            font-family: 'Cairo', sans-serif;
-            font-size: 1.4rem;
-            color: #333;
-            font-weight: bold;
+            font-family: 'Cairo', sans-serif; font-size: 1.3rem; color: #333; font-weight: bold; display: block;
         }
 
-        @keyframes slideUp {
-            from { opacity: 0; transform: translateY(10px); }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-5px); }
             to { opacity: 1; transform: translateY(0); }
         }
-
     </style>
 </head>
 <body>
@@ -301,263 +227,194 @@
     <div class="content-container" id="contentArea"></div>
 
     <div class="bottom-nav">
-        <button class="nav-btn" id="nextBtn" onclick="changePage(1)">
-            التالي
-            <span>&#8592;</span>
-        </button>
-        
+        <button class="nav-btn" id="nextBtn" onclick="changePage(1)">التالي &#8592;</button>
         <div class="page-counter" id="pageIndicator">1 / 5</div>
-        
-        <button class="nav-btn" id="prevBtn" onclick="changePage(-1)">
-            <span>&#8594;</span>
-            السابق
-        </button>
+        <button class="nav-btn" id="prevBtn" onclick="changePage(-1)">&#8594; السابق</button>
     </div>
 
     <div class="sheet-overlay" id="sheetOverlay" onclick="closeSheet(event)">
         <div class="sheet-content">
-            <div class="sheet-header">
-                <span class="sheet-title">الترجمة والتحليل</span>
-                <button class="close-btn" onclick="toggleSheet(false)">&times;</button>
+            <div style="font-family:'Cairo'; color:#666; margin-bottom:10px;">معنى الكلمة:</div>
+            <div id="selectedWordBox" class="selected-word-box">
+                <div class="sw-container">
+                    <span id="swEnglish" class="sw-english"></span>
+                    <button id="audioBtn" class="audio-btn" onclick="playAudio()">🔊</button>
+                </div>
+                <span id="swArabic" class="sw-arabic"></span>
             </div>
-            <div id="sheetBody"></div>
         </div>
     </div>
 
     <script>
-        // --- القاموس الشامل والموسع ---
+        // --- القاموس الشامل ---
         const dictionary = {
-            // كلمات الربط والضمائر
-            "the": "الـ", "of": "من/لـ", "in": "في", "and": "و", "is": "هو/يكون", 
-            "are": "هم/يكونون", "to": "إلى/لـ", "a": "أداة تنكير", "an": "أداة تنكير", 
-            "with": "مع", "without": "بدون", "or": "أو", "by": "بواسطة", "that": "الذي/ذلك",
-            "which": "الذي/التي", "this": "هذا", "these": "هؤلاء/هذه", "it": "هو/هي",
-            "can": "يمكن", "be": "يكون", "from": "من", "for": "لأجل", "on": "على", 
-            "so": "لذلك", "such": "مثل", "as": "كـ/مثل", "at": "عند/في", "but": "لكن", 
-            "very": "جداً", "more": "أكثر", "less": "أقل", "most": "معظم/الأكثر",
-            "what": "ماذا/ما", "you": "أنت", "do": "تفعل", "because": "لأن", "some": "بعض",
-            "when": "عندما", "where": "أين/حيث", "all": "الكل", "any": "أي", "not": "لا/ليس",
-            "often": "غالباً", "although": "رغم أن", "hence": "وبالتالي", "even": "حتى",
-            "about": "تقريباً/حول", "its": "الخاص به", "their": "الخاص بهم",
-
-            // مصطلحات Shimming
-            "mri": "الرنين المغناطيسي", "requires": "يتطلب", "high": "عالي",
-            "homogeneous": "متجانس", "static": "ثابت", "magnetic": "مغناطيسي",
-            "field": "مجال", "fields": "مجالات", "produce": "ينتج", 
-            "high-resolution": "عالي الدقة", "images": "صور", "image": "صورة",
-            "inhomogeneity": "عدم تجانس", "inhomogeneities": "عدم تجانسات",
-            "high-performance": "عالي الأداء", "scanner": "جهاز الفحص", "scanners": "أجهزة فحص",
-            "maintained": "يُحافظ عليه", "order": "حدود/نظام", "several": "عدة",
-            "ppm": "جزء بالمليون", "after": "بعد", "manufacturing": "تصنيع",
-            "magnet": "مغناطيس", "adjusted": "معدل/مضبط", "points": "نقاط",
-            "uniform": "موحد/منتظم", "making": "عمل/إجراء", "small": "صغير",
-            "mechanical": "ميكانيكي", "electrical": "كهربائي", "adjustments": "تعديلات",
-            "overall": "كلي/شامل", "process": "عملية", "known": "معروف",
-            "shimming": "تشذيب/تعديل المجال", "itself": "نفسه", "adequately": "بشكل كافي",
-            "necessary": "ضروري", "improve": "يحسن", "shim": "جهاز التعديل/قطعة تعديل",
-            "device": "جهاز", "used": "مستخدم", "adjust": "يعدل",
-            "accomplished": "يتم/منجز", "two": "اثنين", "methods": "طرق",
-            "passive": "سلبي", "active": "فعال", "add": "يضيف", "pieces": "قطع",
-            "iron": "حديد", "magnetized": "ممغنط", "materials": "مواد",
-            "typically": "عادةً", "called": "يسمى", "involves": "يتضمن",
-            "steel": "فولاذ", "good": "جيد", "qualities": "خصائص/نوعيات",
-            "placed": "موضوع", "near": "قرب", "permanent": "دائم",
-            "superconducting": "فائق التوصيل", "become": "يصبح", "own": "خاصته",
-            "extra": "إضافي", "exciting": "مهيج/مثير", "currents": "تيارات",
-            "current": "تيار", "performed": "يتم/يُجرى", "coils": "ملفات",
-            "coil": "ملف", "adjustable": "قابل للتعديل", "passage": "مرور",
-            "unique": "فريد", "geometric": "هندسي", "configurations": "تشكيلات/ترتيبات",
-            "designed": "مصمم", "correct": "يصحح", "specific": "محدد",
-            "geometries": "أشكال هندسية", "cases": "حالات", "both": "كلا",
-            "additional": "إضافي", "increase": "يزيد", "total": "كلي",
-
-            // مصطلحات RF Coils
-            "radio": "راديو", "frequency": "تردد", "rf": "تردد راديوي",
-            "needed": "مطلوب", "receive": "استلام", "transmit": "إرسال",
-            "signals": "إشارات", "signal": "إشارة", "system": "نظام",
-            "comprises": "يتألف من", "set": "مجموعة", "components": "مكونات",
-            "component": "مكون", "transmitting": "إرسال", "receiving": "استلام",
-            "waves": "موجات", "involved": "مشارك/متضمن", "nuclei": "أنوية",
-            "selecting": "اختيار", "slices": "شرائح/مقاطع", "applying": "تطبيق",
-            "gradients": "تدرجات", "acquisition": "استحواذ/اكتساب", "vital": "حيوي",
-            "performance": "أداء", "important": "مهم", "affects": "يؤثر",
-            "quality": "جودة", "obtaining": "الحصول على", "clear": "واضح",
-            "human": "بشري", "body": "جسم", "categorized": "مصنف",
-            "different": "مختلف", "categories": "فئات", "volume": "حجمي",
-            "surface": "سطحي", "design": "تصميم", "provide": "يوفر",
-            "inside": "داخل", "highly": "للغاية", "desirable": "مرغوب",
-            "ideal": "مثالي", "region": "منطقة", "interest": "اهتمام",
-            "large": "كبير", "view": "رؤية/منظر", "means": "يعني",
-            "noise": "ضوضاء", "whole": "كامل", "just": "فقط",
-            "area": "مساحة/منطقة", "examination": "فحص", "sometimes": "أحياناً",
-            "only": "فقط", "clinical": "سريري", "applications": "تطبيقات",
-            "built": "مبني/مصمم", "perform": "أداء/تنفيذ", "whole-body": "الجسم بالكامل",
-            "imaging": "تصوير", "smaller": "أصغر", "constructed": "مبني/مشيد",
-            "head": "رأس", "other": "آخر", "extremities": "أطراف",
-            "requiring": "يتطلب", "great": "عظيم/كبير", "deal": "قدر/كمية",
-            "power": "طاقة", "size": "حجم", "driven": "مُشغل/مُساق",
-            "quadrature": "متعامد", "reduce": "يقلل", "requirements": "متطلبات",
-            "figure": "شكل", "shows": "يظهر/يوضح", "knee": "ركبة",
-            "transmit/receive": "إرسال/استلام", "received": "مستلم",
-
-            // مصطلحات Surface & Phased Array
-            "sensitivity": "حساسية", "name": "اسم", "already": "بالفعل",
-            "implies": "يوحي/يعني", "around": "حول", "anatomy": "تشريح/أعضاء",
-            "patient": "مريض", "directly": "مباشرة", "temporo-mandibular": "الصدغي الفكي",
-            "joint": "مفصل", "orbits": "محاجر العين", "shoulder": "كتف",
-            "consists": "يتكون", "single": "مفرد", "multi-turn": "متعدد اللفات",
-            "loops": "حلقات", "copper": "نحاس", "wire": "سلك",
-            "ratio": "نسبة", "snr": "نسبة الإشارة للضوضاء", "allow": "يسمح",
-            "detect": "يكتشف/يلتقط", "disadvantage": "عيب/سلبية", "lose": "يفقد",
-            "uniformity": "تجانس/انتظام", "quickly": "بسرعة", "move": "تتحرك",
-            "away": "بعيداً", "case": "حالة", "circular": "دائري",
-            "depth": "عمق", "penetration": "اختراق", "half": "نصف",
-            "diameter": "قطر", "poor": "فقير/سيء", "examples": "أمثلة",
-            "few": "قليل", "right": "قائم/يمنة", "angles": "زوايا",
-            "one": "واحد", "another": "آخر", "oriented": "موجه",
-            "degrees": "درجات", "relative": "نسبي", "each": "كل",
-            "out": "خارج", "phase": "طور", "circularization": "تدوير",
-            "polarization": "استقطاب", "mode": "وضع/نمط", "generate": "يولد",
-            "three": "ثلاثة", "types": "أنواع", "real": "حقيقي",
-            "imaginary": "تخيلي", "magnitude": "مقدار", "nowadays": "في هذه الايام",
-            "shown": "موضح", "phased": "طوري", "array": "مصفوفة",
-            "multiple": "متعدد", "combined": "مدموج", "elements": "عناصر",
-            "record": "تسجيل", "simultaneously": "في آن واحد", "independently": "بشكل مستقل",
-            "greater": "أعظم/أكبر", "level": "مستوى", "explored": "مستكشف",
-            "highest": "أعلى", "delivered": "مقدم/واصل", "limited": "محدود",
-            "sensitive": "حساس", "combining": "دمج", "possible": "ممكن",
-            "create": "يخلق/ينشئ", "spine": "عمود فقري", "average": "معدل",
-            "today": "اليوم", "come": "تأتي",
-
-            // مصطلحات Other Hardware
-            "hardware": "أجهزة/عتاد", "work": "يعمل", "part": "جزء",
-            "chain": "سلسلة", "transmitted": "مرسل", "into": "إلى داخل",
-            "receives": "يستلم", "actually": "في الواقع", "faraday": "فاراداي",
-            "shield": "درع", "range": "مدى/نطاق", "same": "نفسه",
-            "transmissions": "بث/إرسال", "why": "لماذا", "cage": "قفص",
-            "prevent": "يمنع", "enter": "يدخل", "room": "غرفة",
-            "may": "قد/ربما", "cause": "يسبب", "artifacts": "تشويشات/شوائب",
-            "someone": "شخص ما", "said": "قال", "like": "مثل",
-            "watching": "مشاهدة", "television": "تلفزيون", "function": "يعمل/وظيفة",
-            "properly": "بصورة صحيحة", "sit": "يوضع/يجلس", "specialized": "متخصص",
-            "chamber": "غرفة/حجرة", "shielded": "معزول/محمي", "against": "ضد",
-            "interference": "تداخل", "protection": "حماية", "weak": "ضعيف",
-            "emanate": "ينبعث", "scanned": "مفحوص", "overwhelmed": "مغمور/يطغى عليه",
-            "also": "أيضاً", "stop": "يوقف", "frequencies": "ترددات",
-            "interfering": "متداخل", "equipment": "معدات", "outside": "خارج",
-            "furthermore": "علاوة على ذلك", "processor": "معالج", "process": "يعالج",
-            "control": "تحكم/سيطرة", "complex": "معقد", "business": "عمل/شأن"
+            "the": "الـ", "of": "من/لـ", "in": "في", "and": "و", "is": "هو/يكون", "adjustment": "تعديل",
+            "are": "هم/يكونون", "to": "إلى/لـ", "a": "أداة تنكير", "an": "أداة تنكير", "signal": "إشارة",
+            "with": "مع", "without": "بدون", "or": "أو", "by": "بواسطة", "that": "الذي/ذلك", "affects": "يؤثر",
+            "which": "الذي/التي", "this": "هذا", "these": "هؤلاء/هذه", "it": "هو/هي", "important": "مهم",
+            "can": "يمكن", "be": "يكون", "from": "من", "for": "لأجل", "on": "على", "one": "واحد",
+            "so": "لذلك", "such": "مثل", "as": "كـ/مثل", "at": "عند/في", "but": "لكن", "means": "يعني",
+            "very": "جداً", "more": "أكثر", "less": "أقل", "most": "معظم/الأكثر", "need": "تحتاج",
+            "what": "ماذا/ما", "you": "أنت", "do": "تفعل", "because": "لأن", "some": "بعض", "sometimes": "أحيانًا",
+            "when": "عندما", "where": "أين/حيث", "all": "الكل", "any": "أي", "not": "لا/ليس", "Signal": "إشارة",
+            "often": "غالباً", "although": "رغم أن", "hence": "وبالتالي", "even": "حتى", "another": "آخر",
+            "about": "تقريباً/حول", "its": "الخاص به", "their": "الخاص بهم", "has": "لديه/يملك", "advantage": "ميزة",
+            "have": "لدينا/يملكون", "does": "يفعل", "let's": "دعنا", "say": "يقول/لنقل", "loop": "حلقة",
+            "between": "بين", "now": "الآن", "just": "فقط", "later": "لاحقاً", "only": "فقط", "three": "ثلاثة",
+            "if": "إذا/لو", "we": "نحن", "us": "نحن (ضمير)", "let": "دع", "into": "إلى داخل", "image": "صورة",
+            "how": "كيف", "no": "لا", "other": "آخر", "will": "سوف", "do": "يفعل", "signal-to-noise": "إشارة إلى ضوضاء",
+            "after": "بعد", "before": "قبل", "in": "في", "sensitive": "حساس",
+            
+            // مصطلحات Shimming & RF
+            "mri": "رنين مغناطيسي", "requires": "يتطلب", "high": "عالي", "homogeneous": "متجانس", "greater": "اكبر",
+            "static": "ثابت", "magnetic": "مغناطيسي", "field": "مجال", "fields": "مجالات", "same": "نفس",
+            "produce": "ينتج", "high-resolution": "عالي الدقة", "images": "صور", "inhomogeneity": "عدم تجانس",
+            "inhomogeneities": "عدم تجانسات", "performance": "أداء", "scanner": "جهاز فحص", "well": "كذلك",
+            "maintained": "محافظ عليه", "order": "نظام/حدود", "several": "عدة", "ppm": "جزء بالمليون",
+            "manufacturing": "تصنيع", "magnet": "مغناطيس", "adjusted": "معدل", "points": "نقاط",
+            "uniform": "موحد", "making": "عمل", "small": "صغير", "mechanical": "ميكانيكي",
+            "electrical": "كهربائي", "adjustments": "تعديلات", "overall": "كلي/شامل", "process": "عملية",
+            "known": "معروف", "shimming": "تشذيب", "itself": "نفسه", "adequately": "بشكل كافي",
+            "necessary": "ضروري", "improve": "يحسن", "shim": "شم (جهاز تعديل)", "homogeneity": "تجانس",
+            "bo": "B0", "device": "جهاز", "used": "مستخدم", "adjust": "يعدل", "accomplished": "منجز/يتم",
+            "methods": "طرق", "two": "اثنين", "passive": "سلبي", "active": "فعال", "add": "يضيف",
+            "pieces": "قطع", "iron": "حديد", "magnetized": "ممغنط", "materials": "مواد", "typically": "عادة",
+            "involves": "يتضمن", "steel": "فولاذ", "good": "جيد", "qualities": "خصائص", "placed": "موضوع",
+            "near": "قرب", "permanent": "دائم", "superconducting": "فائق التوصيل", "become": "يصبح",
+            "own": "خاصته", "use": "يستخدم", "extra": "إضافي", "exciting": "مهيج", "currents": "تيارات",
+            "performed": "منفذ/يتم", "coils": "ملفات", "coil": "ملف", "adjustable": "قابل للتعديل",
+            "current": "تيار", "requires": "يتطلب", "passage": "مرور", "electric": "كهربائي",
+            "through": "خلال", "unique": "فريد", "geometric": "هندسي", "configurations": "تشكيلات",
+            "designed": "مصمم", "correct": "يصحح", "specific": "محدد", "geometries": "أشكال هندسية",
+            "cases": "حالات", "both": "كلا", "additional": "إضافي", "produced": "منتج", "increase": "يزيد",
+            "total": "كلي", "radio": "راديو", "frequency": "تردد", "rf": "RF", "needed": "مطلوب",
+            "receive": "استلام", "transmit": "إرسال", "signals": "إشارات", "system": "نظام",
+            "comprises": "يتألف من", "set": "مجموعة", "components": "مكونات", "transmitting": "إرسال",
+            "receiving": "استلام", "radiofrequency": "تردد راديوي", "waves": "موجات", "involved": "مشارك",
+            "nuclei": "أنوية", "selecting": "اختيار", "slices": "شرائح", "applying": "تطبيق",
+            "gradients": "تدرجات", "acquisition": "استحواذ", "vital": "حيوي", "component": "مكون",
+            "affect": "يؤثر", "quality": "جودة", "obtaining": "الحصول على", "clear": "واضح",
+            "human": "بشري", "body": "جسم", "categorized": "مصنف", "categories": "فئات",
+            "volume": "حجمي", "surface": "سطحي", "design": "تصميم", "provide": "يوفر",
+            "inside": "داخل", "highly": "للغاية", "desirable": "مرغوب", "ideal": "مثالي",
+            "region": "منطقة", "interest": "اهتمام", "large": "كبير", "view": "رؤية",
+            "noise": "ضوضاء", "whole": "كامل", "area": "منطقة", "examination": "فحص",
+            "clinical": "سريري", "applications": "تطبيقات", "built": "مبني", "perform": "أداء",
+            "whole-body": "الجسم بالكامل", "smaller": "أصغر", "constructed": "مشيد/مبني",
+            "head": "رأس", "extremities": "أطراف", "requiring": "يتطلب", "great": "كبيره",
+            "deal": "قدر", "power": "طاقة", "size": "حجم", "driven": "مساق/مشغل",
+            "quadrature": "متعامد", "reduce": "يقلل", "requirements": "متطلبات", "figure": "شكل",
+            "shows": "يظهر", "knee": "ركبة", "transmit/receive": "إرسال/استلام", "sensitivity": "حساسية",
+            "name": "اسم", "already": "بالفعل", "implies": "يوحي", "anatomy": "تشريح",
+            "patient": "مريض", "directly": "مباشرة", "temporo-mandibular": "صدغي فكي", "joint": "مفصل",
+            "orbits": "محاجر العين", "shoulder": "كتف", "consists": "يتكون", "single": "مفرد",
+            "multi-turn": "متعدد اللفات", "loops": "حلقات", "copper": "نحاس", "wire": "سلك",
+            "ratio": "نسبة", "snr": "SNR", "allow": "يسمح", "detect": "يكتشف", "disadvantage": "عيب/سلبية",
+            "lose": "يفقد", "uniformity": "انتظام", "quickly": "بسرعة", "move": "يتحرك", "away": "بعيداً",
+            "case": "حالة", "circular": "دائري", "depth": "عمق", "penetration": "اختراق", "half": "نصف",
+            "diameter": "قطر", "poor": "فقير/سيء", "examples": "أمثلة", "angles": "زوايا", "oriented": "موجه",
+            "degrees": "درجات", "relative": "نسبي", "phase": "طور", "circularization": "تدوير",
+            "polarization": "استقطاب", "mode": "وضع", "generate": "يولد", "types": "أنواع",
+            "real": "حقيقي", "imaginary": "تخيلي", "magnitude": "مقدار", "nowadays": "هذه الأيام",
+            "phased": "طوري", "array": "مصفوفة", "multiple": "متعدد", "combined": "مدموج",
+            "elements": "عناصر", "record": "يسجل", "simultaneously": "في آن واحد", "independently": "بشكل مستقل",
+            "level": "مستوى", "explored": "مستكشف", "highest": "أعلى", "delivered": "مقدم/واصل",
+            "limited": "محدود", "combining": "دمج", "possible": "ممكن", "create": "يخلق",
+            "qd": "QD", "spine": "عمود فقري", "average": "معدل", "today": "اليوم", "come": "تأتي",
+            "hardware": "أجهزة", "work": "يعمل", "part": "جزء", "chain": "سلسلة", "transmitted": "مرسل",
+            "receives": "يستلم", "actually": "في الواقع", "faraday": "فاراداي", "shield": "درع",
+            "range": "نطاق", "transmissions": "بث/إرسال", "scanners": "أجهزة فحص", "cage": "قفص",
+            "prevent": "يمنع", "enter": "يدخل", "room": "غرفة", "cause": "يسبب", "artifact": "تشويش",
+            "artifacts": "تشويشات", "someone": "شخص ما", "said": "قال", "watching": "مشاهدة",
+            "television": "تلفزيون", "function": "يعمل/وظيفة", "properly": "بصورة صحيحة", "sit": "يجلس/يوضع",
+            "specialized": "متخصص", "chamber": "حجرة", "shielded": "معزول/محمي", "against": "ضد",
+            "interference": "تداخل", "protection": "حماية", "weak": "ضعيف", "emanate": "ينبعث",
+            "scanned": "مفحوص", "overwhelmed": "مغمور/يطغى عليه", "stop": "يوقف", "frequencies": "ترددات",
+            "interfering": "متداخل", "equipment": "معدات", "outside": "خارج", "furthermore": "علاوة على ذلك",
+            "processor": "معالج", "process": "يعالج", "control": "تحكم", "complex": "معقد", "business": "عمل/شأن"
         };
 
-        // --- النصوص (نفسها ما تغيرت) ---
         const pages = [
-            // السلايد الأول: 1.3 Shimming
+            // Slide 1: 1.3 Shimming
             {
                 content: [
                     {
                         text: "1.3 Shimming",
-                        trans: "1.3 التشذيب (تعديل تجانس المجال)",
+                        trans: "1.3 التشذيب",
                         isTitle: true
                     },
                     {
                         text: "MRI requires a very high homogeneous static magnetic field. In order to produce high-resolution images, the magnetic field inhomogeneity produced in a high-performance MRI scanner must be maintained to the order of several ppm.",
-                        trans: "الرنين يحتاج مجال مغناطيسي ثابت ومتجانس كلش. حتى ننتج صور دقة عالية، لازم أي عدم تجانس بالمجال بجهاز الرنين المتطور (high-performance) يبقى بحدود أجزاء بالمليون (ppm)."
+                        trans: "الرنين يحتاج مجال مغناطيسي ثابت ومتجانس كلش عالي. حتى ننتج صور عالية الدقة، عدم تجانس المجال المغناطيسي المنتج بجهاز رنين عالي الأداء لازم نحافظ عليه بحدود عدة أجزاء بالمليون (ppm)."
                     },
                     {
                         text: "After manufacturing, the magnet must be adjusted in some points to produce a more uniform field by making small mechanical and/or electrical adjustments to the overall field. This process is known as shimming.",
-                        trans: "بعد مرحلة التصنيع، لازم نعدل المغناطيس بنقاط معينة حتى يولد مجال موحد (Uniform) أكثر، وهذا الشي يصير عن طريق إجراء تعديلات صغيرة - ميكانيكية أو كهربائية - على المجال الكلي. وهاي العملية نسميها Shimming (التشذيب)."
+                        trans: "بعد التصنيع، المغناطيس لازم يتعدل ببعض النقاط حتى ينتج مجال موحد أكثر عن طريق عمل تعديلات ميكانيكية و/أو كهربائية صغيرة للمجال الكلي. هاي العملية معروفة باسم التشذيب (shimming)."
                     },
                     {
                         text: "Because the magnet itself is not adequately homogeneous, it is necessary to improve or “shim” the homogeneity of the static magnetic field (Bo). A shim is a device used to adjust the homogeneity of a magnetic field.",
-                        trans: "لأن المغناطيس بحد ذاته ما يكون متجانس بشكل كافي (Adequately homogeneous)، فمن الضروري نحسن أو نسوي 'Shim' لتجانس المجال المغناطيسي الثابت (Bo). والـ Shim هو جهاز نستخدمه حتى نعدل تجانس المجال المغناطيسي."
+                        trans: "لأن المغناطيس نفسه مو متجانس بشكل كافي، من الضروري نحسن أو 'نشذب' تجانس المجال المغناطيسي الثابت (Bo). الشم (Shim) هو جهاز يستخدم لتعديل تجانس مجال مغناطيسي."
                     },
                     {
                         text: "Shimming (or adjustment of the static magnetic field homogeneity) is accomplished by two methods: (1) Passive shimming (2) Active shimming",
-                        trans: "الـ Shimming (أو تعديل تجانس المجال المغناطيسي الثابت) يتم بطريقتين: (1) التشذيب السلبي (Passive shimming) و(2) التشذيب الفعال (Active shimming)."
+                        trans: "التشذيب (أو تعديل تجانس المجال المغناطيسي الثابت) يتم بطريقتين: (1) تشذيب سلبي (2) تشذيب فعال."
                     },
                     {
-                        text: "Passive shimming: The mechanical adjustments, which add small pieces of iron or magnetized materials, are typically called passive shimming.",
-                        trans: "التشذيب السلبي (Passive shimming): التعديلات الميكانيكية، اللي نضيف بيها قطع صغيرة من الحديد أو مواد ممغنطة، عادةً نسميها التشذيب السلبي."
+                        text: "Passive shimming: The mechanical adjustments, which add small pieces of iron or magnetized materials, are typically called passive shimming. Passive shimming involves pieces of steel with good magnetic qualities. The steel pieces are placed near the permanent or superconducting magnet. They become magnetized and produce their own magnetic field.",
+                        trans: "التشذيب السلبي: التعديلات الميكانيكية، اللي تضيف قطع صغيرة من الحديد أو مواد ممغنطة، عادة تسمى تشذيب سلبي. التشذيب السلبي يتضمن قطع من الفولاذ بخصائص مغناطيسية زينة. قطع الفولاذ توضع قرب المغناطيس الدائم أو فائق التوصيل. هي تصير ممغنطة وتنتج مجالها المغناطيسي الخاص."
                     },
                     {
-                        text: "Passive shimming involves pieces of steel with good magnetic qualities. The steel pieces are placed near the permanent or superconducting magnet. They become magnetized and produce their own magnetic field.",
-                        trans: "تتضمن قطع فولاذ بخصائص مغناطيسية زينة. تنحط قرب المغناطيس الدائم أو فائق التوصيل. هاي القطع راح تتمغنط وتولد مجالها الخاص (اللي يعدل المجال الرئيسي)."
-                    },
-                    {
-                        text: "Active shimming: The electrical adjustments, which use extra exciting currents, are known as active shimming. Active shimming is performed with coils with adjustable current.",
-                        trans: "التشذيب الفعال: هي تعديلات كهربائية تستخدم تيارات إضافية. وتتم بواسطة ملفات (Coils) يمر بيها تيار نكدر نتحكم بيه."
-                    },
-                    {
-                        text: "Active shimming requires passage of electric current through coils with unique geometric configurations. The shim coils are designed to correct inhomogeneities of specific geometries.",
-                        trans: "تتطلب مرور تيار بملفات ذات أشكال هندسية خاصة. وملفات الـ Shim مصممة حتى تصحح عدم التجانس بأشكال هندسية محددة."
+                        text: "Active shimming: The electrical adjustments, which use extra exciting currents, are known as active shimming. Active shimming is performed with coils with adjustable current. Active shimming requires passage of electric current through coils with unique geometric configurations. The shim coils are designed to correct inhomogeneities of specific geometries.",
+                        trans: "التشذيب الفعال: التعديلات الكهربائية، اللي تستخدم تيارات تهييج إضافية، معروفة باسم التشذيب الفعال. التشذيب الفعال يتم بملفات (coils) بتيار قابل للتعديل. التشذيب الفعال يتطلب مرور تيار كهربائي خلال ملفات بتشكيلات هندسية فريدة. ملفات الشم مصممة حتى تصحح عدم التجانس لأشكال هندسية محددة."
                     },
                     {
                         text: "In both cases (active and passive shimming), the additional magnetic fields (produced by coils or steel) add to the overall magnetic field of the superconducting magnet in such a way as to increase the homogeneity of the total field.",
-                        trans: "بالحالتين (التشذيب الفعال والسلبي)، المجالات المغناطيسية الإضافية (اللي تنتجها الملفات أو  الستيل) تنضاف للمجال المغناطيسي العام للمغناطيس فائق التوصيل، بحيث تشتغل بطريقة تزيد من تجانس المجال الكلي"
+                        trans: "بكل الحالتين (فعال وسلبي)، المجالات المغناطيسية الإضافية (المنتجة بواسطة الملفات أو الفولاذ) تنضاف للمجال المغناطيسي الكلي للمغناطيس فائق التوصيل بطريقة تزيد تجانس المجال الكلي."
                     }
                 ]
             },
-            // السلايد الثاني: 1.4 RF Coils + Volume
+            // Slide 2: 1.4 RF Coils + Volume
             {
                 content: [
                     {
                         text: "1.4 Radio Frequency Coils",
-                        trans: "1.4 ملفات التردد الراديوي (RF)",
-                        isTitle: true
-                    },
-                    {
-                        text: "Radio Frequency (RF) coils are needed to receive and/or transmit the RF signals used in MRI scanners.",
-                        trans: "ملفات الـ RF ضرورية لاستلام و/أو إرسال إشارات الراديو المستخدمة بأجهزة الرنين."
-                    },
-                    {
-                        text: "RF coils system comprises the set of components for transmitting and receiving the radiofrequency waves involved in exciting the nuclei, selecting slices, applying gradients and in signal acquisition.",
-                        trans: "نظام ملفات الـ RF يتألف من مجموعة المكونات الخاصة بإرسال واستلام موجات التردد الراديوي المشاركة بتهييج الأنوية، واختيار المقاطع، وتطبيق التدرجات، واستحواذ الإشارة"
-                    },
-                    {
-                        text: "RF coils are vital component in the performance of the radiofrequency system. They one of the most important components that affects image quality and obtaining clear images of the human body.",
-                        trans: "كويلات RF هي جزء حيوي بأداء النظام. وهي وحدة من أهم المكونات اللي تأثر على جودة الصورة والحصول على صور واضحة لجسم الإنسان."
-                    },
-                    {
-                        text: "RF coils for MRI can be categorized into two different categories: volume coils and surface coils.",
-                        trans: "ملفات الـ RF للرنين ممكن تتصنف لفئتين مختلفة: الملفات الحجمية (Volume coils) والملفات السطحية (Surface coils)."
-                    },
-                    {
-                        text: "1.4.1 Volume RF Coils",
-                        trans: "1.4.1 الملفات الحجمية",
+                        trans: "1.4 ملفات التردد الراديوي",
                         isSubTitle: true
                     },
                     {
-                        text: "The design of a volume coil is to provide a homogeneous RF field inside the coil which is highly desirable for transmit, but is less ideal when the region of interest is small.",
-                        trans: "تصميم الملف الحجمي هو لتوفير مجال RF متجانس داخل الكويل وهذا شي كلش مرغوب للإرسال، بس هو أقل مثالية من تكون منطقة الاهتمام صغيرة"
+                        text: "Radio Frequency (RF) coils are needed to receive and/or transmit the RF signals used in MRI scanners. RF coils system comprises the set of components for transmitting and receiving the radiofrequency waves involved in exciting the nuclei, selecting slices, applying gradients and in signal acquisition.",
+                        trans: "ملفات التردد الراديوي (RF) مطلوبة لاستلام و/أو إرسال إشارات RF المستخدمة بأجهزة الرنين. نظام ملفات RF يتكون من مجموعة مكونات لإرسال واستلام موجات التردد الراديوي المشاركة بتهييج الأنوية، اختيار الشرائح، تطبيق التدرجات وباستحواذ الإشارة."
                     },
                     {
-                        text: "The large field of view of volume coils means that by receiving the noise that they receive from the whole body, not just the region of interest. Volume coils need to have the area of examination inside the coil.",
-                        trans: "مجال الرؤية الواسع للملفات الحجمية يعني أنها تستلم الضوضاء من الجسم كله، مو بس من منطقة الاهتمام. الملفات الحجمية لازم تكون منطقة الفحص بداخل الكويل."
+                        text: "RF coils are vital component in the performance of the radiofrequency system. They one of the most important components that affects image quality and obtaining clear images of the human body. RF coils for MRI can be categorized into two different categories: volume coils and surface coils.",
+                        trans: "ملفات RF هي مكون حيوي بأداء نظام التردد الراديوي. هي وحدة من أهم المكونات اللي تأثر على جودة الصورة والحصول على صور واضحة لجسم الإنسان. ملفات RF للرنين ممكن تتصنف لفئتين مختلفة: ملفات حجمية وملفات سطحية."
                     },
                     {
-                        text: "They can be used for transmit and receive, although sometimes they are used for receive only.",
-                        trans: "ممكن نستخدمها للإرسال والاستلام سوية، واحياناً تستخدم للاستلام فقط."
+                        text: "1.4.1 Volume RF Coils",
+                        trans: "1.4.1 ملفات RF الحجمية",
+                        isSubTitle: true
                     },
                     {
-                        type: 'image',
-                        src: 'volume_coil_generic.jpg' 
+                        text: "The design of a volume coil is to provide a homogeneous RF field inside the coil which is highly desirable for transmit, but is less ideal when the region of interest is small. The large field of view of volume coils means that by receiving the noise that they receive from the whole body, not just the region of interest.",
+                        trans: "تصميم الملف الحجمي هو لتوفير مجال RF متجانس داخل الملف واللي هو مرغوب كلش للإرسال، بس أقل مثالية من تكون المنطقة المهمة صغيرة. مجال الرؤية الكبير للملفات الحجمية يعني باستلام الضوضاء اللي يستلموها من الجسم كله، مو بس المنطقة المهمة."
+                    },
+                    {
+                        text: "Volume coils need to have the area of examination inside the coil. They can be used for transmit and receive, although sometimes they are used for receive only.",
+                        trans: "الملفات الحجمية تحتاج تخلي منطقة الفحص داخل الملف. ممكن تستخدم للإرسال والاستلام، ولو أحياناً تستخدم للاستلام فقط."
+                    },
+                    {
+                         // (اهناي اكو صورة )
+                         type: 'image',
+                         src: 'volume_rf_coils.jpg'
                     }
                 ]
             },
-            // السلايد الثالث: تكملة Volume + Surface Coils
+            // Slide 3: Volume Cont. + Surface Coils
             {
                 content: [
                     {
-                        text: "Most clinical applications volume coil is built to perform whole-body imaging, and smaller volume coils have been constructed for the head and other extremities.",
-                        trans: "بأغلب التطبيقات السريرية، الكويل الحجمي مبني حتى يسوي تصوير للجسم بالكامل، واكو كويلات حجمية أصغر انبنت للراس وبقية الأطراف"
-                    },
-                    {
-                        text: "These coils are requiring a great deal of RF power because of their size, so they are often driven in quadrature in order to reduce by two the RF power requirements.",
-                        trans: "هاي الكويلات تتطلب كمية جبيرة من طاقة الـ RF بسبب حجمها، لذلك غالباً يتم تشغيلها بوضع الـ Quadrature حتى نقلل متطلبات طاقة الـ RF للنصف"
-                    },
-                    {
-                        text: "Figure 5 shows two volume coils. The head coil is a transmit/receive coil; the knee coil is received only.",
-                        trans: "الشكل 5 يوضح كويلين حجمية. كويل الرأس هو كويل إرسال/استلام، وكويل الركبة هو للاستلام فقط"
+                        text: "Most clinical applications volume coil is built to perform whole-body imaging, and smaller volume coils have been constructed for the head and other extremities. These coils are requiring a great deal of RF power because of their size, so they are often driven in quadrature in order to reduce by two the RF power requirements. Figure 5 shows two volume coils. The head coil is a transmit/receive coil; the knee coil is received only.",
+                        trans: "أغلب التطبيقات السريرية الملف الحجمي مبني حتى يسوي تصوير للجسم كله، وملفات حجمية أصغر انبنت للرأس وأطراف أخرى. هاي الملفات تتطلب قدر كبير من طاقة RF بسبب حجمها، لذلك هي غالباً تُساق بشكل متعامد (quadrature) حتى تقلل متطلبات طاقة RF للنص. شكل 5 يراوي ملفين حجمية. ملف الرأس هو ملف إرسال/استلام؛ ملف الركبة هو استلام فقط."
                     },
                     {
                         text: "1.4.2 Surface Coils",
@@ -566,27 +423,24 @@
                     },
                     {
                         text: "Surface coils have very high RF sensitivity over a small area of interest. As the name already implies, surface coils are placed over or around the surface of the anatomy of interest to the patient directly such as the temporo-mandibular joint, the orbits or the shoulder.",
-                        trans: "الكويلات السطحية عدها حساسية RF كلش عالية على منطقة اهتمام صغيرة. ومثل ما يوضح اسمها، هاي الكويلات تنحط مباشرةً فوق أو حول سطح الجزء التشريحي اللي نريد نفحصه بالمريض، مثل مفصل الفك، أو محجر العين، أو الكتف"
+                        trans: "الملفات السطحية عدها حساسية RF كلش عالية على منطقة اهتمام صغيرة. مثل ما الاسم يوحي مسبقاً، الملفات السطحية توضع فوق أو حول سطح التشريح المهم للمريض مباشرة مثل المفصل الصدغي الفكي، محاجر العين أو الكتف."
                     },
                     {
                         text: "The coil consists of single or multi-turn loops of copper wire. They have a high Signal to Noise Ratio (SNR) and allow for very high-resolution imaging because their small field of view and hence they only detect noise from the region of interest.",
-                        trans: "الكويل يتكون من حلقات سلك نحاس مفردة أو متعددة اللفات. وعدها نسبة إشارة للضوضاء (SNR) عالية وتسمح بتصوير بدقة كلش عالية، بسبب مجال رؤيتها الصغير، وبالتالي هي تستلم الضوضاء بس من منطقة الاهتمام"
+                        trans: "الملف يتكون من حلقات مفردة أو متعددة اللفات من سلك نحاس. عدهم نسبة إشارة للضوضاء (SNR) عالية وتسمح بتصوير عالي الدقة كلش لأن مجال رؤيتهم صغير وبالتالي يكتشفون ضوضاء بس من المنطقة المهمة."
                     },
                     {
-                        text: "The disadvantage is that they lose signal uniformity very quickly when you move away from the coil. In case of a circular surface coil, the depth penetration is about half its diameter.",
-                        trans: "العيب هو أنها تفقد تجانس الإشارة كلش بسرعة من تبتعد عن الكويل. وبحالة الكويل السطحي الدائري، اختراق العمق يكون حوالي نص قطره."
+                        text: "The disadvantage is that they lose signal uniformity very quickly when you move away from the coil. In case of a circular surface coil, the depth penetration is about half its diameter. Surface coils make poor transmit coils because they have poor RF homogeneity, even over their region of interest. Figure 6 shows a few examples of surface coils.",
+                        trans: "العيوب هي أنهم يفقدون انتظام الإشارة بسرعة كلش من تبتعد عن الملف. بحالة ملف سطحي دائري، عمق الاختراق هو حوالي نص قطره. الملفات السطحية تصير ملفات إرسال تعبانة (فقيرة) لأن عدها تجانس RF فقير، حتى فوق المنطقة المهمة. شكل 6 يراوي كم مثال للملفات السطحية."
                     },
                     {
-                        text: "Surface coils make poor transmit coils because they have poor RF homogeneity, even over their region of interest. Figure 6 shows a few examples of surface coils.",
-                        trans: "الكويلات السطحية تعتبر كويلات إرسال ضعيفة، لأن تجانس الـ RF بيها ضعيف، حتى على منطقة الاهتمام مالتها. والشكل 6 يوضح كم مثال للكويلات السطحية"
-                    },
-                    {
-                        type: 'image',
-                        src: 'surface_coil_examples.jpg' 
+                         // (اهناي اكو صورة)
+                         type: 'image',
+                         src: 'surface_coils.jpg'
                     }
                 ]
             },
-            // السلايد الرابع: Quadrature + Phased Array
+            // Slide 4: Quadrature + Phased Array
             {
                 content: [
                     {
@@ -595,20 +449,12 @@
                         isSubTitle: true
                     },
                     {
-                        text: "The quadrature coil consists of two coils, which are placed at right angles to one another that mean oriented 90 degrees relative to each other.",
-                        trans: "كويل الكوادريتشر يتكون من كويلين، موضوعة بزوايا قائمة وحدة عالثانية، وهذا يعني موجهة بزاوية 90 درجة بالنسبة لبعضها"
+                        text: "The quadrature coil consists of two coils, which are placed at right angles to one another that mean oriented 90 degrees relative to each other. Therefore, the MRI signals received by each, coil is 90 degrees out of phase with each other. The advantage of this design is that they produce √2 more signal than single loop coils.",
+                        trans: "الملف المتعامد يتكون من ملفين، موضوعات بزوايا قائمة لبعض يعني موجهة 90 درجة بالنسبة لبعض. لذلك، إشارات الرنين المستلمة بواسطة كل واحد، الملف 90 درجة خارج الطور عن اللاخ. فائدة هذا التصميم هي أنها تنتج إشارة أكثر بـ جدر 2 من ملفات الحلقة المفردة."
                     },
                     {
-                        text: "Therefore, the MRI signals received by each, coil is 90 degrees out of phase with each other. The advantage of this design is that they produce √2 more signal than single loop coils.",
-                        trans: "لذلك، إشارات الرنين اللي يستلمها كل كويل تكون بفرق طور 90 درجة وحدة عن اللخ. ميزة هذا التصميم هي أنها تنتج إشارة أكثر بمقدار 2√ من الكويلات ذات الحلقة الواحدة"
-                    },
-                    {
-                        text: "The quadrature coil operates in the circular polarization circularization mode. The quadrature coil can generate three types of images: Real image, Imaginary image, and Magnitude image.",
-                        trans: "كويل الكوادريتشر يشتغل بنمط الاستقطاب الدائري. وهالكويل يكدر يولد ثلاث أنواع من الصور: الصورة الحقيقية (Real image)، والصورة التخيلية (Imaginary image)، والصورة المقدارية (Magnitude image)."
-                    },
-                    {
-                        text: "Nowadays, most volume coils are Quadrature coils. The coils shown in (Figure 6) are Quadrature coils.",
-                        trans: "بالوكت الحالي، أغلب الكويلات الحجمية هي كويلات Quadrature. والكويلات المعروضة بـ (شكل 6) هي كويلات Quadrature."
+                        text: "The quadrature coil operates in the circular polarization circularization mode. The quadrature coil can generate three types of images: Real image, Imaginary image, and Magnitude image. Nowadays, most volume coils are Quadrature coils. The coils shown in (Figure 6) are Quadrature coils.",
+                        trans: "الملف المتعامد يشتغل بوضع تدوير الاستقطاب الدائري. الملف المتعامد يكدر يولد ثلاث أنواع صور: صورة حقيقية، صورة تخيلية، وصورة المقدار. بهالأيام، أغلب الملفات الحجمية هي ملفات متعامدة. الملفات الموضحة بـ (شكل 6) هي ملفات متعامدة."
                     },
                     {
                         text: "1.4.4 Phased Array Coils",
@@ -616,63 +462,53 @@
                         isSubTitle: true
                     },
                     {
-                        text: "Phased array coils consist of multiple surface coils with small diameter which are combined (coil elements in phased array) to record the signal simultaneously and independently, so a greater level can be explored.",
-                        trans: "كويلات الـ Phased array تتكون من عدة كويلات سطحية بقطر صغير مربوطة سوية (عناصر الكويل بالمصفوفة) حتى تسجل الإشارة بنفس الوقت وبشكل مستقل، وبهيج ممكن استكشاف مستوى أكبر."
+                        text: "Phased array coils consist of multiple surface coils with small diameter which are combined (coil elements in phased array) to record the signal simultaneously and independently, so a greater level can be explored. Surface coils have the highest signal-to-noise ratio (SNR) than that delivered by one large diameter but have a limited sensitive area.",
+                        trans: "ملفات المصفوفة الطورية تتكون من ملفات سطحية متعددة بقطر صغير مدموجة (عناصر ملف بالمصفوفة الطورية) حتى تسجل الإشارة بنفس الوقت وبشكل مستقل، حتى مستوى أكبر يكدر يُستكشف. الملفات السطحية عدها أعلى نسبة إشارة للضوضاء (SNR) من اللي يقدمها قطر واحد كبير بس عدها منطقة حساسة محدودة."
                     },
                     {
-                        text: "Surface coils have the highest signal-to-noise ratio (SNR) than that delivered by one large diameter but have a limited sensitive area. By combining 4 or 6 surface coils it is possible to create a coil with a large sensitive area.",
-                        trans: "الكويلات السطحية تنطي أعلى نسبة إشارة للضوضاء (SNR) مقارنة باللي نحصله من كويل واحد بقطر جبير، بس مساحة التحسس مالتها محدودة. ومن خلال دمج 4 أو 6 كويلات سطحية، يصير ممكن نسوي كويل بمساحة تحسس جبيرة."
+                        text: "By combining 4 or 6 surface coils it is possible to create a coil with a large sensitive area. (Figure 7) shows the design of two phased array coils. The QD Body Array coil is a volume coil, while the Spine Array coil is a surface coil. Phased Array coils produce in average √2 more signal than Quadrature coils. Today most MRI systems come with Quadrature and phased array coils.",
+                        trans: "بدمج 4 أو 6 ملفات سطحية يصير ممكن نخلق ملف بمنطقة حساسة كبيرة. (شكل 7) يراوي تصميم ملفين مصفوفة طورية. ملف QD للجسم هو ملف حجمي، بينما ملف العمود الفقري هو ملف سطحي. ملفات المصفوفة الطورية تنتج بالمعدل إشارة أكثر بـ جدر 2 من الملفات المتعامدة. اليوم أغلب أنظمة الرنين تجي ويا ملفات متعامدة ومصفوفة طورية."
                     },
                     {
-                        text: "(Figure 7) shows the design of two phased array coils. The QD Body Array coil is a volume coil, while the Spine Array coil is a surface coil.",
-                        trans: "(شكل 7) يوضح تصميم ثنين من كويلات الـ Phased array. كويل الـ QD Body Array هو كويل حجمي، بينما كويل الـ Spine Array هو كويل سطحي."
-                    },
-                    {
-                        text: "Phased Array coils produce in average √2 more signal than Quadrature coils. Today most MRI systems come with Quadrature and phased array coils.",
-                        trans: "كويلات الـ Phased Array تنطي بالمعدل إشارة أكثر بمقدار 2√ من كويلات الـ Quadrature. واليوم، أغلب أجهزة الرنين تجي وياها كويلات Quadrature و Phased array."
-                    },
-                    {
-                        type: 'image',
-                        src: 'phased_array_diagram.jpg' 
+                         // (اهناي اكو صورة )
+                         type: 'image',
+                         src: 'phased_array_coils.jpg'
                     }
                 ]
             },
-            // السلايد الخامس: Other Hardware + Faraday
+            // Slide 5: Other Hardware + Faraday
             {
                 content: [
                     {
                         text: "1.5 Other Hardware",
                         trans: "1.5 أجهزة أخرى",
-                        isTitle: true
-                    },
-                    {
-                        text: "There is more hardware needed to make an MRI system work. A very important part is the Radio Frequency (RF) chain, which produces the RF signal transmitted into the patient, and receives the RF signal from the patient (see figure 8). Actually, the receive coil is a part of the RF chain.",
-                        trans: "اكو بعد هاردوير (أجهزة) نحتاجها حتى يشتغل نظام الرنين. جزء كلش مهم هو سلسلة الـ RF (RF chain)، اللي هي تولد إشارة الـ RF وترسلها للمريض، وتستلم إشارة الـ RF من المريض (شوف شكل 8). وبالحقيقة، كويل الاستلام يعتبر جزء من سلسلة الـ RF."
-                    },
-                    {
-                        text: "Faraday shield",
-                        trans: "درع (قفص) فاراداي",
                         isSubTitle: true
                     },
                     {
-                        text: "The frequency range used in MRI is the same as used for radio transmissions. That's why MRI scanners are placed in a Faraday cage to prevent radio waves to enter the scanner room, which may cause artifacts on the MRI image.",
-                        trans: "نطاق الترددات المستخدم بالرنين هو نفسه المستخدم ببث الراديو. ولهذا السبب أجهزة الرنين تنحط بداخل قفص فاراداي (Faraday cage) حتى نمنع موجات الراديو من أن تدخل لغرفة الجهاز، لأن ممكن تسبب تشوهات (Artifacts) بصورة الرنين."
+                        text: "There is more hardware needed to make an MRI system work. A very important part is the Radio Frequency (RF) chain, which produces the RF signal transmitted into the patient, and receives the RF signal from the patient (see figure 8). Actually, the receive coil is a part of the RF chain.",
+                        trans: "اكو أجهزة أكثر مطلوبة حتى تخلي نظام الرنين يشتغل. جزء كلش مهم هو سلسلة التردد الراديوي (RF)، اللي تنتج إشارة RF المرسلة لداخل المريض، وتستلم إشارة RF من المريض (شوف شكل 8). بالواقع، ملف الاستلام هو جزء من سلسلة RF."
                     },
                     {
-                        text: "Someone once said: “MRI is like watching television with a radio”. To function properly, an MRI scanner needs to sit in a specialized room or chamber shielded against Radio Frequency (RF) interference.",
-                        trans: "فد مرة واحد كال: الرنين يشبه مشاهدة التلفزيون بالراديو. وحتى يشتغل بصورة صحيحة، جهاز الرنين لازم ينحط بغرفة أو حجرة خاصة معزولة ضد تداخل الترددات الراديوية (RF interference)."
+                        text: "Faraday shield",
+                        trans: "درع فاراداي",
+                        isSubTitle: true
                     },
                     {
-                        text: "Without such protection the very weak RF signals that emanate from the patient when scanned would be overwhelmed. Also, to stop the radio frequencies produced by the scanner from interfering with equipment outside the cage.",
-                        trans: "بدون هاي الحماية، إشارات الـ RF الكلش ضعيفة اللي تطلع من المريض أثناء الفحص راح تضيع وتطغى عليها الإشارات الخارجية. وهمينة، حتى نمنع ترددات الراديو اللي يطلعها الجهاز من أن تسوي تداخل (تشويش) ويا الأجهزة الموجودة خارج القفص."
+                        text: "The frequency range used in MRI is the same as used for radio transmissions. That's why MRI scanners are placed in a Faraday cage to prevent radio waves to enter the scanner room, which may cause artifacts on the MRI image. Someone once said: “MRI is like watching television with a radio”.",
+                        trans: "نطاق التردد المستخدم بالرنين هو نفسه المستخدم للبث الراديوي. لهذا السبب أجهزة الرنين توضع بقفص فاراداي لمنع موجات الراديو تدخل غرفة الجهاز، اللي ممكن تسبب تشوهات بصورة الرنين. شخص مرة كال: 'الرنين مثل مشاهدة التلفزيون ويا راديو'."
                     },
                     {
-                        text: "Furthermore, one needs a processor to process the received signal, as well as to control the complex business of scanning.",
-                        trans: "وفوكاها، نحتاج معالج (Processor) حتى يعالج الإشارة المستلمة، وكذلك حتى يسيطر على عملية الفحص المعقدة."
+                        text: "To function properly, an MRI scanner needs to sit in a specialized room or chamber shielded against Radio Frequency (RF) interference. Without such protection the very weak RF signals that emanate from the patient when scanned would be overwhelmed.",
+                        trans: "حتى يشتغل بصورة صحيحة، جهاز الرنين يحتاج يكعد بغرفة متخصصة أو حجرة محمية ضد تداخل التردد الراديوي (RF). بدون هيج حماية إشارات RF الضعيفة كلش اللي تنبعث من المريض عند الفحص راح يطغى عليها."
                     },
                     {
-                        type: 'image',
-                        src: 'faraday_cage_setup.jpg' 
+                        text: "Also, to stop the radio frequencies produced by the scanner from interfering with equipment outside the cage. Furthermore, one needs a processor to process the received signal, as well as to control the complex business of scanning.",
+                        trans: "أيضاً، لإيقاف ترددات الراديو المنتجة بواسطة الجهاز من التداخل ويا المعدات خارج القفص. علاوة على ذلك، الواحد يحتاج معالج حتى يعالج الإشارة المستلمة، وكذلك للسيطرة على الشغل المعقد للمسح."
+                    },
+                    {
+                         // (اهناي اكو صورة )
+                         type: 'image',
+                         src: 'faraday_cage.jpg'
                     }
                 ]
             }
@@ -692,19 +528,36 @@
             
             data.content.forEach((item, idx) => {
                 if (item.type === 'image') {
-                    // عرض الصور
                     html += `
                         <div class="lecture-image-container">
-                            <img src="${item.src}" alt="Lecture Image" class="lecture-image">
+                            <img src="${item.src}" alt="Lecture Figure" class="lecture-image">
                         </div>
                     `;
                 } else {
-                    let cssClass = "clickable";
-                    if (item.isTitle) cssClass += " title-text";
-                    if (item.isSubTitle) cssClass += " sub-title";
-                    if (item.isCaption) cssClass = "label"; 
+                    let cssClass = "english-paragraph";
+                    if (item.isTitle) cssClass = "title-text";
+                    if (item.isSubTitle) cssClass = "sub-title";
 
-                    html += `<p class="${cssClass}" onclick="analyzeSentence(${idx})">${item.text}</p>`;
+                    const words = item.text.split(' ');
+                    let interactiveText = '';
+                    words.forEach(word => {
+                        const cleanWordForLookup = word.replace(/[.,()?!:;“”"°\[\]]/g, '').toLowerCase();
+                        interactiveText += `<span class="interactive-word" onclick="showWordMeaning('${cleanWordForLookup}', '${word}')">${word}</span> `;
+                    });
+
+                    html += `
+                        <div class="text-block">
+                            <div class="${cssClass}">
+                                ${interactiveText}
+                            </div>
+                            <button class="toggle-trans-btn" onclick="toggleTranslation('trans-${idx}')">
+                                إظهار الترجمة &#11015;
+                            </button>
+                            <div id="trans-${idx}" class="inline-translation">
+                                ${item.trans}
+                            </div>
+                        </div>
+                    `;
                 }
             });
 
@@ -712,71 +565,45 @@
             window.scrollTo(0,0);
         }
 
-        function analyzeSentence(idx) {
-            const data = pages[currentIndex].content[idx];
-            
-            if(!data.text) return; 
-            
-            const originalText = data.text;
-            const words = originalText.split(' ');
-            let interactiveText = '';
-
-            words.forEach(word => {
-                const cleanWordForLookup = word.replace(/[.,()?!:;“”]/g, '').toLowerCase();
-                interactiveText += `<span class="interactive-word" onclick="showWordMeaning('${cleanWordForLookup}', this, '${word}')">${word}</span> `;
-            });
-
-            const sheetBody = document.getElementById('sheetBody');
-            sheetBody.innerHTML = `
-                <div class="text-box">
-                    <span class="label">اضغط على أي كلمة لمعرفة معناها:</span>
-                    <div class="english-text">${interactiveText}</div>
-                </div>
-
-                <div class="text-box">
-                    <span class="label">الترجمة العراقية:</span>
-                    <div class="arabic-text">${data.trans}</div>
-                </div>
-
-                <div id="selectedWordBox" class="selected-word-box">
-                    <span id="swEnglish" class="sw-english"></span>
-                    <span id="swArabic" class="sw-arabic"></span>
-                </div>
-            `;
-
-            toggleSheet(true);
+        function toggleTranslation(id) {
+            const el = document.getElementById(id);
+            if (el.style.display === "block") {
+                el.style.display = "none";
+            } else {
+                el.style.display = "block";
+            }
         }
 
-        function showWordMeaning(cleanWord, element, originalWord) {
-            document.querySelectorAll('.interactive-word').forEach(el => el.classList.remove('active'));
-            element.classList.add('active');
+        let currentWordForAudio = "";
 
+        function showWordMeaning(cleanWord, originalWord) {
             const translation = dictionary[cleanWord] || "---"; 
             
+            currentWordForAudio = originalWord.replace(/[.,()?!:;“”"°\[\]]/g, '');
+
             const box = document.getElementById('selectedWordBox');
             const enSpan = document.getElementById('swEnglish');
             const arSpan = document.getElementById('swArabic');
 
-            enSpan.innerText = originalWord.replace(/[.,()?!:;“”]/g, ''); 
+            enSpan.innerText = currentWordForAudio; 
             arSpan.innerText = translation;
 
-            box.classList.remove('show');
-            void box.offsetWidth; 
-            box.classList.add('show');
+            const overlay = document.getElementById('sheetOverlay');
+            overlay.classList.add('active');
         }
 
-        function toggleSheet(show) {
-            const overlay = document.getElementById('sheetOverlay');
-            if (show) {
-                overlay.classList.add('active');
-            } else {
-                overlay.classList.remove('active');
+        function playAudio() {
+            if (currentWordForAudio) {
+                const utterance = new SpeechSynthesisUtterance(currentWordForAudio);
+                utterance.lang = 'en-US'; 
+                window.speechSynthesis.speak(utterance);
             }
         }
 
         function closeSheet(e) {
             if (e.target.id === 'sheetOverlay') {
-                toggleSheet(false);
+                const overlay = document.getElementById('sheetOverlay');
+                overlay.classList.remove('active');
             }
         }
 
